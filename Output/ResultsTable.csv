@@ -1,0 +1,19 @@
+,Phylo,Predictor 1,Predictor 2,EP,LPPD,D-WAIC,W-WAIC
+Base model,,,,2.746,-60.638,10.018,0.002
+Interdependence land,,0.92 (0.30; 1.51),,3.99,-57.073,5.375,0.02
+Interdependence water,,-0.24 (-0.83;  0.32),,5.605,-59.682,13.825,0
+Intra-group conflict,,-0.86 (-1.47; -0.32),,4.439,-54.767,1.662,0.13
+Intra-cultural conflict,,0.44 (-0.25;  1.14),,4.999,-60.164,13.577,0
+Inter-cultural conflict,,0.81 (0.22; 1.37),,4.142,-56.311,4.157,0.037
+Social stratification,,0.17 (-0.41;  0.75),,5.52,-60.21,14.71,0
+Intra-group conflict (Interdependence land),,-0.59 (-1.282;  0.036),0.57 (-0.19;  1.27),6.025,-54.304,3.908,0.042
+Inter-cultural conflict (Interdependence land),,0.50 (-0.19;  1.21),0.62 (-0.16;  1.35),5.92,-55.632,6.354,0.012
+Base model,$\checkmark$,,,8.436,-50.923,1.968,0.111
+Interdependence land,$\checkmark$,0.86 (0.12; 1.56),,7.342,-52.865,3.665,0.048
+Interdependence water,$\checkmark$,-0.32 (-1.15;  0.42),,9.802,-50.375,3.604,0.049
+Intra-group conflict,$\checkmark$,-0.86 (-1.51; -0.20),,7.148,-51.227,0,0.298
+Intra-cultural conflict,$\checkmark$,0.42 (-0.41;  1.34),,10.037,-51.312,5.948,0.015
+Inter-cultural conflict,$\checkmark$,0.79 (0.14; 1.43),,6.852,-52.563,2.08,0.105
+Social stratification,$\checkmark$,0.10 (-0.62;  0.88),,10.632,-50.813,6.14,0.014
+Intra-group conflict (Interdependence land),$\checkmark$,-0.62 (-1.35;  0.15),0.53 (-0.35;  1.30),8.285,-51.345,2.511,0.085
+Inter-cultural conflict (Interdependence land),$\checkmark$,0.51 (-0.29;  1.23),0.57 (-0.25;  1.42),8.229,-52.468,4.645,0.029
