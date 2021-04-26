@@ -1,0 +1,5 @@
+*.pdf
+*.RData
+*.rds
+*.Rapp.history
+*.DS_Store
