@@ -1,3 +1,3 @@
-# Game Goal Structures
+# AustroGamesValues
 
-This data and code correspond to the Leisterer-Peoples, et al. (submitted) manuscript. 
+This data and code correspond to the Leisterer-Peoples, et al. (under review) manuscript. 
