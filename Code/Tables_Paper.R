@@ -34,29 +34,118 @@ write.csv(N_GS_spec3, "Output/N_GS_sum.csv", quote=F, row.names=F)
 
  
 # # Filter table
-# filter <- data.frame(cbind(c("(None)", "Assigned to ABVD","Goal structure", "Non-foreign origin", "Matching ABVD codes with Pulotu", "Matching time frames with Pulotu", "Culture on the MCCT")), NA, NA)
-# names(filter) <- c("Filter", "Games", "Cultures")
+filter <- data.frame(cbind(c("(None)",	
+								"Coded as a game",
+								"Linked to an ABVD",
+								"Coded goal structure", 
+								"Excluding non-local origin", 
+								"ABVD on the MCCT", 
+								"Matching time frames with Pulotu {+/-} 50 yrs",
+								"Covariate data in Pulotu",
+								"Total")), NA, NA, NA)
+names(filter) <- c("Filter", "Games remaining", "Games dropped", "Cultures remaining")
 
-# filter$Games[1] <- nrow(g2)
-# filter$Cultures[1] <- "-"
+# no filter
+filter_1 <- game_filter(Games, clean_games = FALSE,
+                 clean_ABVD = FALSE,
+                 clean_GS = FALSE,
+                 clean_origin = "keep_all",
+                 clean_pulotu = FALSE,
+                 clean_pulotu_time_0 = FALSE,
+                 clean_pulotu_time_50 = FALSE,
+                 clean_phylo = FALSE)
+filter[1,2] <- nrow(filter_1)
+filter[1,3] <- "-"
+filter[1,4] <- "-"
 
-# filter$Games[2] <- sum(!is.na(g2$Culture_ID))
-# filter$Cultures[2] <- nrow()
+# games
+filter_2 <- game_filter(Games, clean_games = TRUE,
+                 clean_ABVD = FALSE,
+                 clean_GS = FALSE,
+                 clean_origin = "keep_all",
+                 clean_pulotu = FALSE,
+                 clean_pulotu_time_0 = FALSE,
+                 clean_pulotu_time_50 = FALSE,
+                 clean_phylo = FALSE)
+filter[2,2] <- nrow(filter_2)
+filter[2,3] <- sum(nrow(filter_1) - nrow(filter_2))
+filter[2,4] <- length(unique(filter_2$ABVD_code))
 
-# levels(g$Goal.Structure)[levels(g$Goal.Structure)==""] <-NA
-# filter$Games[3] <- nrow(g[!is.na(g$Goal.Structure),]) #before ABVD!
-# filter$Cultures[3] <- sum(!is.na(unique(g$Culture_ID[!is.na(g$Goal.Structure)])))
+# abvd
+filter_3 <- game_filter(Games, clean_games = TRUE,
+                 clean_ABVD = TRUE,
+                 clean_GS = FALSE,
+                 clean_origin = "keep_all",
+                 clean_pulotu = FALSE,
+                 clean_pulotu_time_0 = FALSE,
+                 clean_pulotu_time_50 = FALSE,
+                 clean_phylo = FALSE)
+filter[3,2] <- nrow(filter_3)
+filter[3,3] <- sum(nrow(filter_2) - nrow(filter_3))
+filter[3,4] <- length(unique(filter_3$ABVD_code))
 
-# filter$Games[4] <- sum(g2$foreign==0)				#before ABVD!
-# filter$Cultures[4] <- nrow()
+# goal structure
+filter_4 <- game_filter(Games, clean_games = TRUE,
+                 clean_ABVD = TRUE,
+                 clean_GS = TRUE,
+                 clean_origin = "keep_all",
+                 clean_pulotu = FALSE,
+                 clean_pulotu_time_0 = FALSE,
+                 clean_pulotu_time_50 = FALSE,
+                 clean_phylo = FALSE)
+filter[4,2] <- nrow(filter_4)
+filter[4,3] <- sum(nrow(filter_3) - nrow(filter_4))
+filter[4,4] <- length(unique(filter_4$ABVD_code))
 
-# filter$Games[5] <- sum(g2$timing_ok==1)				#before ABVD!
-# filter$Cultures[5] <- sum(!is.na(unique(g2$Culture_ID[g2$timing_ok==1])))
+# remove non-local origin
+filter_5 <- game_filter(Games, clean_games = TRUE,
+                 clean_ABVD = TRUE,
+                 clean_GS = TRUE,
+                 clean_origin = "remove_nonlocal",
+                 clean_pulotu = FALSE,
+                 clean_pulotu_time_0 = FALSE,
+                 clean_pulotu_time_50 = FALSE,
+                 clean_phylo = FALSE)
+filter[5,2] <- nrow(filter_5)
+filter[5,3] <- sum(nrow(filter_4) - nrow(filter_5))
+filter[5,4] <- length(unique(filter_5$ABVD_code))
 
-# filter$Games[6] <- nrow(legal_games)
-# filter$Cultures[6] <- length(unique(legal_games$Culture_ID))
+# on phylogeny
+filter_6 <- game_filter(Games, clean_games = TRUE,
+                 clean_ABVD = TRUE,
+                 clean_GS = TRUE,
+                 clean_origin = "remove_nonlocal",
+                 clean_pulotu = FALSE,
+                 clean_pulotu_time_0 = FALSE,
+                 clean_pulotu_time_50 = FALSE,
+                 clean_phylo = TRUE)
+filter[6,2] <- nrow(filter_6)
+filter[6,3] <- sum(nrow(filter_5) - nrow(filter_6))
+filter[6,4] <- length(unique(filter_6$ABVD_code))
 
-# filter$Games[7] <- sum(Games)
-# filter$Cultures[7] <- length(d_final$tree_name)
+# pulotu time
+filter_7 <- game_filter(Games, clean_games = TRUE,
+                 clean_ABVD = TRUE,
+                 clean_GS = TRUE,
+                 clean_origin = "remove_nonlocal",
+                 clean_pulotu = FALSE,
+                 clean_pulotu_time_0 = FALSE,
+                 clean_pulotu_time_50 = TRUE,
+                 clean_phylo = TRUE)
+filter[7,2] <- nrow(filter_7)
+filter[7,3] <- sum(nrow(filter_6) - nrow(filter_7))
+filter[7,4] <- length(unique(filter_7$ABVD_code))
 
-# g2$[which(g2$timing_ok==1),]
+# covariate data in pulotu
+filter[8,2] <- sum(model_dat$Games)
+filter[8,3] <- sum(nrow(filter_7) - sum(model_dat$Games))
+filter[8,4] <- nrow(model_dat$D)
+
+# total
+filter[9,2] <- sum(model_dat$Games)
+filter[9,3] <- "-" # sum(nrow(filter_1) - sum(model_dat$Games))
+filter[9,4] <- nrow(model_dat$D)
+
+write.csv(filter, "Output/N_filters.csv", quote=F, row.names=F)
+
+
