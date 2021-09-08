@@ -206,7 +206,90 @@ g_data2$Con_Between  <- ifelse(as.numeric(as.character(g_data2$Conflict_between_
 g_data2$Con_Within  <- ifelse(as.numeric(as.character(g_data2 $Conflict_within_communities))<4,1,0)
 g_data2$Con_Other  <- ifelse(as.numeric(as.character(g_data2 $Conflict_with_other_cultures))<3,1,0)
 g_data2$Strat  <- ifelse(as.numeric(as.character(g_data2 $Social_Stratification))>2,1,0)
-																					 ##
+
+
+
+# # # # # # # # #
+# wrangle data to get in right format for tables
+t.dat <- g_data[,c(32,24:29,15:20)]
+t.dat$Culture <- NA
+t.dat$SocStrat <- NA
+t.dat$Land <- NA
+t.dat$Water <- NA
+t.dat$Within <- NA
+t.dat$Btwn <- NA
+t.dat$Other <- NA
+
+for(i in 1:nrow(t.dat)){
+  foo.nr <- which(p2$ABVD_Code %in% t.dat $ABVD_Code_orig[i])
+  	if(length(foo.nr)==0){
+  		print(t.dat $ABVD_Code_orig[i])
+	} else if(length(foo.nr)==1){
+  		t.dat$Culture[i] <- p2$Culture[foo.nr]
+	    t.dat$SocStrat[i] <- p2$Social_Stratification[foo.nr]
+		t.dat$Land[i] <- p2$v28.Land.based_hunting_performed_by_one_or_more_groups[foo.nr]
+	    t.dat$Water[i] <- p2$v31.Fishing_and_water.based_hunting_performed_by_one_or_more_groups[foo.nr]
+    	t.dat$Within[i] <- p2$v14.Conflict_within_communities[foo.nr]
+	    t.dat$Btwn[i] <- p2$v15.Conflict_between_communities_of_the_culture[foo.nr]
+    	t.dat$Other[i] <- p2$v16.Conflict_with_other_cultures[foo.nr]
+	} else if(length(foo.nr)>1){
+  		t.dat$Culture[i] <- p2$Culture[foo.nr[1]]
+	    t.dat$SocStrat[i] <- p2$Social_Stratification[foo.nr[1]]
+		t.dat$Land[i] <- p2$v28.Land.based_hunting_performed_by_one_or_more_groups[foo.nr[1]]
+	    t.dat$Water[i] <- p2$v31.Fishing_and_water.based_hunting_performed_by_one_or_more_groups[foo.nr[1]]
+    	t.dat$Within[i] <- p2$v14.Conflict_within_communities[foo.nr[1]]
+	    t.dat$Btwn[i] <- p2$v15.Conflict_between_communities_of_the_culture[foo.nr[1]]
+    	t.dat$Other[i] <- p2$v16.Conflict_with_other_cultures[foo.nr[1]]
+	}
+	# if(length(foo.nr)==0){
+		# foo.list <- unlist(strsplit(t.dat $ABVD_Code_orig[i], ";"))
+ 		# unlist(strsplit(p2$ABVD_Code,"; ")) %in% foo.list[1]
+		
+		# }
+	# foo.match <- which(longlat$ABVD_code %in% t.dat $ABVD_Code_orig[i])
+	# if(length(foo.match)>0)
+		# t.dat$ABVD_language[i] <- longlat$ABVD_language[foo.match]
+}
+
+# manually add the 10 missing rows (weren't matched b/c of the ABVDs)
+add_row <- function(data, i, foo.nr){
+	t.dat <- data
+	t.dat$Culture[i] <- p2$Culture[foo.nr]
+	t.dat$SocStrat[i] <- p2$Social_Stratification[foo.nr]
+	t.dat$Land[i] <- p2$v28.Land.based_hunting_performed_by_one_or_more_groups[foo.nr]
+	t.dat$Water[i] <- p2$v31.Fishing_and_water.based_hunting_performed_by_one_or_more_groups[foo.nr]
+	t.dat$Within[i] <- p2$v14.Conflict_within_communities[foo.nr]
+	t.dat$Btwn[i] <- p2$v15.Conflict_between_communities_of_the_culture[foo.nr]
+	t.dat$Other[i] <- p2$v16.Conflict_with_other_cultures[foo.nr]
+	return(t.dat)
+}
+
+which(is.na(t.dat$Culture))
+# i=32
+# unlist(strsplit(t.dat$ABVD_Code_orig[i],";"))
+# sum(unlist(strsplit(p2$ABVD_Code,"; ")) %in% unlist(strsplit(t.dat$ABVD_Code_orig[i],";")))
+# which(unlist(strsplit(p2$ABVD_Code,"; ")) %in% unlist(strsplit(t.dat$ABVD_Code_orig[i],";")))
+# unlist(strsplit(p2$ABVD_Code,"; ")) %in% unlist(strsplit(t.dat$ABVD_Code_orig[i],";"))
+# p2$ABVD_Code
+# p2[61,]
+t.dat <- add_row(t.dat, 5,99)	# tahiti	#checked
+t.dat <- add_row(t.dat, 6,86)	# rarotonga	#rows 56 and 86
+t.dat <- add_row(t.dat, 8,88)	# rennell & bellona	#checked
+t.dat <- add_row(t.dat, 11,64)	# marshall islands	#checked
+t.dat <- add_row(t.dat, 12,21)	# chuuk		#checked
+t.dat <- add_row(t.dat, 13,115)	# woleai	#checked
+t.dat <- add_row(t.dat, 15,15)	# buka		#checked
+t.dat <- add_row(t.dat, 24,97)		# subanun	#checked
+t.dat <- add_row(t.dat, 31,60)	# manus(titan)	#checked
+t.dat <- add_row(t.dat, 32,61)		# maori		#checked
+
+# convert to coding in paper
+t.dat $Land  <- ifelse(as.numeric(as.character(t.dat $Land))>1,1,0)
+t.dat $Water  <- ifelse(as.numeric(as.character(t.dat $Water))>2,1,0)
+t.dat $Btwn  <- ifelse(as.numeric(as.character(t.dat $Btwn))<3,1,0)
+t.dat $Within  <- ifelse(as.numeric(as.character(t.dat $Within))<4,1,0)
+t.dat $Other  <- ifelse(as.numeric(as.character(t.dat $Other))<3,1,0)
+t.dat $SocStrat  <- ifelse(as.numeric(as.character(t.dat $SocStrat))>2,1,0)
 
 
 
@@ -379,3 +462,35 @@ ggsave("Output/Filters_other.pdf")
   
   
   
+
+# # # # # # # # # # #
+# tables 
+socstrat_tab <- t.dat[,c(14,15,2:13)]
+socstrat_tab <-socstrat_tab[order(socstrat_tab $SocStrat,na.last=FALSE), ] 
+write.csv(socstrat_tab, "Output/Filter_socstrat.csv", quote=F, row.names=F )
+
+land_tab <- t.dat[,c(14,16,2:13)]
+land_tab <- land_tab[order(land_tab $Land,na.last=FALSE), ] 
+write.csv(land_tab, "Output/Filter_ land.csv", quote=F, row.names=F )
+
+water_tab <- t.dat[,c(14,17,2:13)]
+water_tab <- water_tab[order(water_tab $Water,na.last=FALSE), ] 
+write.csv(water_tab, "Output/Filter_ water.csv", quote=F, row.names=F )
+
+within_tab <- t.dat[,c(14,18,2:13)]
+within_tab <- within_tab[order(within_tab $Within,na.last=FALSE), ] 
+write.csv(within_tab, "Output/Filter_within.csv", quote=F, row.names=F )
+
+btwn_tab <- t.dat[,c(14,19,2:13)]
+btwn_tab <- btwn_tab[order(btwn_tab $Btwn,na.last=FALSE), ] 
+write.csv(btwn_tab, "Output/Filter_btwn.csv", quote=F, row.names=F )
+
+other_tab <- t.dat[,c(14,20,2:13)]
+other_tab <- other_tab[order(other_tab $Other,na.last=FALSE), ] 
+write.csv(other_tab, "Output/Filter_other.csv", quote=F, row.names=F )
+
+table(within_tab$Competitive_final>=1, within_tab$Competitive_orig>=1, within_tab$Within, useNA= "ifany")
+table(within_tab$"Cooperative group_final">=1, within_tab $"Cooperative group_orig">=1, within_tab$Within,useNA= "ifany")
+table(within_tab $Solitary_orig>=1, within_tab $Solitary_final>=1, within_tab $Within, useNA= "ifany")
+
+
