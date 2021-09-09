@@ -290,7 +290,7 @@ t.dat $Btwn  <- ifelse(as.numeric(as.character(t.dat $Btwn))<3,1,0)
 t.dat $Within  <- ifelse(as.numeric(as.character(t.dat $Within))<4,1,0)
 t.dat $Other  <- ifelse(as.numeric(as.character(t.dat $Other))<3,1,0)
 t.dat $SocStrat  <- ifelse(as.numeric(as.character(t.dat $SocStrat))>2,1,0)
-
+t.dat $Included <- ifelse(is.na(t.dat$Competitive_final), 0,1)
 
 
 # # # # # # # # 
@@ -373,89 +373,71 @@ ggsave("Output/Filters_barplot4.pdf")
 # plot cultural variants with games by culture
 
 # plot the cultures included and excluded by stratification
-ggplot(g_data2, aes(x = as.factor(Version), y = Count, 
-                    fill = as.factor(Strat), label = "")) + 
-  geom_col(position = "stack") +
-  facet_wrap("ABVD_language",scales="free") +
-  geom_text(position = position_dodge(width = 0.9), vjust = -0.5) +
-  scale_x_discrete(name ="Version", limits=c("orig","final")) +
-  scale_fill_colorblind(na.value="gray80") +
-  labs(fill="Social stratification") +
-  theme_few(base_size=10) +
-  scale_y_continuous(breaks = c(0,5,10,15,25,40)) +
-  geom_hline(yintercept=5, lty=2, color="gray50") 
+ggplot(t.dat, aes(x = as.factor(Culture), y = as.factor(SocStrat), 
+                    color = as.factor(Included), size=2)) + 
+  geom_point() +
+  scale_color_colorblind(na.value="gray80") +
+  labs(color="Included", x = "Culture", y="Social Stratification") +
+  guides(size="none") +
+  theme_few(base_size=10)  +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
 ggsave("Output/Filters_socstrat.pdf")
 
 
 # plot the cultures included and excluded by Land.based_hunting_performed_by_one_or_more_groups
-ggplot(g_data2, aes(x = as.factor(Version), y = Count, 
-                    fill = as.factor(Land), label = "")) + 
-  geom_col(position = "stack") +
-  facet_wrap("ABVD_language",scales="free") +
-  geom_text(position = position_dodge(width = 0.9), vjust = -0.5) +
-  scale_x_discrete(name ="Version", limits=c("orig","final")) +
-  scale_fill_colorblind(na.value="gray80") +
-  labs(fill="Land-based hunting") +
-  theme_few(base_size=10) +
-  scale_y_continuous(breaks = c(0,5,10,15,25,40)) +
-  geom_hline(yintercept=5, lty=2, color="gray50") 
+ggplot(t.dat, aes(x = as.factor(Culture), y = as.factor(Land), 
+                    color = as.factor(Included), size=2)) + 
+  geom_point() +
+  scale_color_colorblind(na.value="gray80") +
+  labs(color="Included", x = "Culture", y="Land-based hunting in groups") +
+  guides(size="none") +
+  theme_few(base_size=10)  +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
 ggsave("Output/Filters_land.pdf")
 
 
 # plot the cultures included and excluded by Fishing_and_water.based_hunting_performed_by_one_or_more_groups
-ggplot(g_data2, aes(x = as.factor(Version), y = Count, 
-                    fill = as.factor(Water), label = "")) + 
-  geom_col(position = "stack") +
-  facet_wrap("ABVD_language",scales="free") +
-  geom_text(position = position_dodge(width = 0.9), vjust = -0.5) +
-  scale_x_discrete(name ="Version", limits=c("orig","final")) +
-  scale_fill_colorblind(na.value="gray80") +
-  labs(fill="Water-based hunting") +
-  theme_few(base_size=10) +
-  scale_y_continuous(breaks = c(0,5,10,15,25,40)) +
-  geom_hline(yintercept=5, lty=2, color="gray50") 
+ggplot(t.dat, aes(x = as.factor(Culture), y = as.factor(Water), 
+                    color = as.factor(Included), size=2)) + 
+  geom_point() +
+  scale_color_colorblind(na.value="gray80") +
+  labs(color="Included", x = "Culture", y="Water-based hunting in groups") +
+  guides(size="none") +
+  theme_few(base_size=10)  +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
 ggsave("Output/Filters_water.pdf")
 
 # plot the cultures included and excluded by Conflict_within_communities
-ggplot(g_data2, aes(x = as.factor(Version), y = Count, 
-                    fill = as.factor(Con_Within), label = "")) + 
-  geom_col(position = "stack") +
-  facet_wrap("ABVD_language",scales="free") +
-  geom_text(position = position_dodge(width = 0.9), vjust = -0.5) +
-  scale_x_discrete(name ="Version", limits=c("orig","final")) +
-  scale_fill_colorblind(na.value="gray80") +
-  labs(fill="Inter-personal conflict") +
-  theme_few(base_size=10) +
-  scale_y_continuous(breaks = c(0,5,10,15,25,40)) +
-  geom_hline(yintercept=5, lty=2, color="gray50") 
+ggplot(t.dat, aes(x = as.factor(Culture), y = as.factor(Within), 
+                    color = as.factor(Included), size=2)) + 
+  geom_point() +
+  scale_color_colorblind(na.value="gray80") +
+  labs(color="Included", x = "Culture", y="Inter-personal conflict") +
+  guides(size="none") +
+  theme_few(base_size=10)  +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
 ggsave("Output/Filters_within.pdf")
 
 # plot the cultures included and excluded by Conflict_between_communities_of_the_culture
-ggplot(g_data2, aes(x = as.factor(Version), y = Count, 
-                    fill = as.factor(Con_Between), label = "")) + 
-  geom_col(position = "stack") +
-  facet_wrap("ABVD_language",scales="free") +
-  geom_text(position = position_dodge(width = 0.9), vjust = -0.5) +
-  scale_x_discrete(name ="Version", limits=c("orig","final")) +
-  scale_fill_colorblind(na.value="gray80") +
-  labs(fill="Intra-group conflict") +
-  theme_few(base_size=10) +
-  scale_y_continuous(breaks = c(0,5,10,15,25,40)) +
-  geom_hline(yintercept=5, lty=2, color="gray50") 
+ggplot(t.dat, aes(x = as.factor(Culture), y = as.factor(Btwn), 
+                    color = as.factor(Included), size=2)) + 
+  geom_point() +
+  scale_color_colorblind(na.value="gray80") +
+  labs(color="Included", x = "Culture", y="Intra-group conflict") +
+  guides(size="none") +
+  theme_few(base_size=10)  +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
 ggsave("Output/Filters_between.pdf")
 
 # plot the cultures included and excluded by Conflict_with_other_cultures
-ggplot(g_data2, aes(x = as.factor(Version), y = Count, 
-                    fill = as.factor(Con_Other), label = "")) + 
-  geom_col(position = "stack") +
-  facet_wrap("ABVD_language",scales="free") +
-  geom_text(position = position_dodge(width = 0.9), vjust = -0.5) +
-  scale_x_discrete(name ="Version", limits=c("orig","final")) +
-  scale_fill_colorblind(na.value="gray80") +
-  labs(fill="Inter-group conflict") +
-  theme_few(base_size=10) +
-  scale_y_continuous(breaks = c(0,5,10,15,25,40)) +
-  geom_hline(yintercept=5, lty=2, color="gray50")
+ggplot(t.dat, aes(x = as.factor(Culture), y = as.factor(Other), 
+                    color = as.factor(Included), size=2)) + 
+  geom_point() +
+  scale_color_colorblind(na.value="gray80") +
+  labs(color="Included", x = "Culture", y="Inter-group conflict") +
+  guides(size="none") +
+  theme_few(base_size=10)  +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, vjust = 1))
 ggsave("Output/Filters_other.pdf")
   
   
@@ -471,11 +453,11 @@ write.csv(socstrat_tab, "Output/Filter_socstrat.csv", quote=F, row.names=F )
 
 land_tab <- t.dat[,c(14,16,2:13)]
 land_tab <- land_tab[order(land_tab $Land,na.last=FALSE), ] 
-write.csv(land_tab, "Output/Filter_ land.csv", quote=F, row.names=F )
+write.csv(land_tab, "Output/Filter_land.csv", quote=F, row.names=F )
 
 water_tab <- t.dat[,c(14,17,2:13)]
 water_tab <- water_tab[order(water_tab $Water,na.last=FALSE), ] 
-write.csv(water_tab, "Output/Filter_ water.csv", quote=F, row.names=F )
+write.csv(water_tab, "Output/Filter_water.csv", quote=F, row.names=F )
 
 within_tab <- t.dat[,c(14,18,2:13)]
 within_tab <- within_tab[order(within_tab $Within,na.last=FALSE), ] 
@@ -489,8 +471,40 @@ other_tab <- t.dat[,c(14,20,2:13)]
 other_tab <- other_tab[order(other_tab $Other,na.last=FALSE), ] 
 write.csv(other_tab, "Output/Filter_other.csv", quote=F, row.names=F )
 
-table(within_tab$Competitive_final>=1, within_tab$Competitive_orig>=1, within_tab$Within, useNA= "ifany")
-table(within_tab$"Cooperative group_final">=1, within_tab $"Cooperative group_orig">=1, within_tab$Within,useNA= "ifany")
-table(within_tab $Solitary_orig>=1, within_tab $Solitary_final>=1, within_tab $Within, useNA= "ifany")
+# 2x2 table with percentage included/excluded and levels of cultural covariates
+socstrat_tab2 <- as.matrix(table(t.dat$SocStrat, t.dat$Included, useNA="ifany"))
+socstrat_tab2 <- cbind(rownames(socstrat_tab2),socstrat_tab2)
+colnames(socstrat_tab2)[1] <- "Social stratification"
+write.csv(socstrat_tab2, "Output/Filter_socstrat2.csv", quote=F, row.names=F)
 
+land_tab2 <- as.matrix(table(t.dat$Land, t.dat$Included, useNA="ifany"))
+land_tab2 <- cbind(rownames(land_tab2), land_tab2)
+colnames(land_tab2)[1] <- "Land"
+write.csv(land_tab2, "Output/Filter_land2.csv", quote=F, row.names=F)
+
+water_tab2 <- as.matrix(table(t.dat$Water, t.dat$Included, useNA="ifany"))
+water_tab2 <- cbind(rownames(water_tab2), water_tab2)
+colnames(water_tab2)[1] <- "Water"
+write.csv(water_tab2, "Output/Filter_water2.csv", quote=F, row.names=F)
+
+within_tab2 <- as.matrix(table(t.dat$Within, t.dat$Included, useNA="ifany"))
+within_tab2 <- cbind(rownames(within_tab2), within_tab2)
+colnames(within_tab2)[1] <- "Inter-personal conflict"
+write.csv(within_tab2, "Output/Filter_within2.csv", quote=F, row.names=F)
+
+btwn_tab2 <- as.matrix(table(t.dat$Btwn, t.dat$Included, useNA="ifany"))
+btwn_tab2 <- cbind(rownames(btwn_tab2), btwn_tab2)
+colnames(btwn_tab2)[1] <- "Intra-group conflict"
+write.csv(btwn_tab2, "Output/Filter_btwn2.csv", quote=F, row.names=F)
+
+other_tab2 <- as.matrix(table(t.dat$Other, t.dat$Included, useNA="ifany"))
+other_tab2 <- cbind(rownames(other_tab2), other_tab2)
+colnames(other_tab2)[1] <- "Inter-group conflict"
+write.csv(other_tab2, "Output/Filter_other2.csv", quote=F, row.names=F)
+
+
+
+# table(within_tab$Competitive_final>=1, within_tab$Competitive_orig>=1, within_tab$Within, useNA= "ifany")
+# table(within_tab$"Cooperative group_final">=1, within_tab $"Cooperative group_orig">=1, within_tab$Within,useNA= "ifany")
+# table(within_tab $Solitary_orig>=1, within_tab $Solitary_final>=1, within_tab $Within, useNA= "ifany")
 
