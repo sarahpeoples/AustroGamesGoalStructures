@@ -21,7 +21,7 @@ source("Code/Simulate_Data.R")
 source("Code/Test_Models.R")
 
 ########################### Process data for Stan
-source("Code/Data_preprocessing.R")			    	
+# source("Code/Data_preprocessing.R")	# code provided, but not necessary to run (.RData file provided below)
 load("Data/model_data.RData")                  
 
 ########################### Fit models in Stan
@@ -48,3 +48,6 @@ source("Code/Predictive_Plots_multitree.R")
 ########################### Save R workspace
 save.image("AustroGames.RData")
 
+
+######################## Compare filtered with unfiltered games
+source("Code/Compare_filtered.R")
